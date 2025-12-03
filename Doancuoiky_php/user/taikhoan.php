@@ -19,7 +19,7 @@ $phone = $_SESSION['so_dien_thoai'] ?? 'Chưa cập nhật';
 <head>
     <meta charset="UTF-8">
     <title>Trang Tài Khoản - CFPLUS</title>
-    <link rel="stylesheet" href="style.css"> <!-- Thêm CSS nếu có -->
+    <link rel="stylesheet" href="../css/styles.css">
     <style>
     body {
         font-family: Arial, sans-serif;
