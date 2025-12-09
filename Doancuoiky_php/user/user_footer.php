@@ -2,9 +2,9 @@
  <footer>
      <div class="footer-content">
          <h3>CFPLUS Cafe & Bakery</h3>
-         <p>📍 Địa chỉ: 123 Đường Nguyễn Huệ, Q.1, TP.HCM</p>
-         <p>📞 Hotline: 1900 xxxx</p>
-         <p>📧 Email: contact@sweetaroma.vn</p>
+         <p>📍 Địa chỉ: 16, Đường Huỳnh Văn Lũy, Phường Phú Lợi, TP.HCM</p>
+         <p>📞 Hotline: 0705369686</p>
+         <p>📧 Email: ngkhoi04@gmail.com</p>
          <div class="social-links">
              <a href="#">📘</a>
              <a href="#">📷</a>
