@@ -41,7 +41,7 @@ session_start();
                     <label for="password">Xác thực mã CAPTCHA*</label>
                     <input type="password" id="password" placeholder="Nhập mã CAPTCHA của bạn" required>
                 </div> -->
-                <button type="submit" id="login-button"><img src="/img/login.png" alt="Đăng Nhập"
+                <button type="submit" id="login-button"><img src="/Doancuoiky_php/img/login.png" alt="Đăng Nhập"
                         style="height: 30px; width: 30px; display: inline-block; vertical-align: middle; margin-right: 5px;">Đăng
                     nhập</button>
             </form>
@@ -51,7 +51,7 @@ session_start();
                     Đăng nhập bằng Facebook</button> -->
                 <button id="google-login"> <a
                         href="https://accounts.google.com/o/oauth2/auth?client_id=794484210721-if98l1699r4oek6s0f6qj0gip5legfnq.apps.googleusercontent.com&redirect_uri=http://caffeecfpluss.com/user/google_callback.php&scope=email profile&response_type=code">
-                        <img src="/img/logogg.png"> Đăng nhập bằng Google
+                        <img src="/Doancuoiky_php/img/logogg.png"> Đăng nhập bằng Google
                     </a>
                 </button>
             </div>

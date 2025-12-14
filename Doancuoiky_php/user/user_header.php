@@ -11,9 +11,9 @@
             <?php
             if (isset($_SESSION['username'])) {
                 echo '<li><a href="taikhoan.php">Xin chào, ' . htmlspecialchars($_SESSION['username']) . '</a></li>';
-                echo '<li><a href="/user/logout.php">Đăng Xuất</a></li>';
+                echo '<li><a href="../user/logout.php">Đăng Xuất</a></li>';
             } else {
-                echo '<li><a href="/user/user_login.php">Đăng Nhập</a></li>';
+                echo '<li><a href="user_login.php">Đăng Nhập</a></li>';
             }
             ?>
 
