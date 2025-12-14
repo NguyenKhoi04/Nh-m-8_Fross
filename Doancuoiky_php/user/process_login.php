@@ -1,46 +1,49 @@
 <?php
 session_start();
-require_once("../database/connect.php"); // file PDO
+require_once("../database/connect.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    try {
 
-        $email = trim($_POST["username"]);
-        $password = trim($_POST["password"]);
+    $email = trim($_POST["username"]);
+    $password = trim($_POST["password"]);
 
-        if (empty($email) || empty($password)) {
-            throw new Exception("Vui lòng nhập đầy đủ email và mật khẩu!");
-        }
+    if (empty($email) || empty($password)) {
+        echo "<script>alert('Vui lòng nhập đầy đủ email và mật khẩu!'); window.history.back();</script>";
+        exit;
+    }
 
-        // Chuẩn bị PDO
-        $sql = "SELECT * FROM nguoi_dung 
-                WHERE email = :email AND vai_tro = 3 LIMIT 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->execute();
+    $sql = "SELECT * FROM nguoi_dung WHERE email = :email LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+    $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Kiểm tra email tồn tại
-        if (!$user) {
-            throw new Exception("Email không tồn tại hoặc không phải tài khoản người dùng!");
-        }
+    if (!$user) {
+        echo "<script>alert('Email không tồn tại!'); window.history.back();</script>";
+        exit;
+    }
 
-        // So sánh mật khẩu plaintext
-        if ($password !== $user["mat_khau_hash"]) {
-            throw new Exception("Mật khẩu không đúng!");
-        }
+    if ($password !== $user["mat_khau_hash"]) {
+        echo "<script>alert('Mật khẩu không đúng!'); window.history.back();</script>";
+        exit;
+    }
 
-        // Lưu session
-        $_SESSION["username"] = $user["ten_dang_nhap"];
-        $_SESSION["user_id"] = $user["id"];
-        $_SESSION["role"] = $user["vai_tro"];
+    $_SESSION["user_id"] = $user["id"];
+    $_SESSION["username"] = $user["ten_dang_nhap"];
+    $_SESSION["role"] = $user["vai_tro"];
 
+    if ($user["vai_tro"] == 1) {
+        header("Location: ../admin/main.php");
+        exit;
+    } else if ($user["vai_tro"] == 2) {
+        header("Location: ../admin/main.php");
+        exit;
+    } else if ($user["vai_tro"] == 3) {
         header("Location: trangchu.php");
         exit;
-
-    } catch (Exception $e) {
-        echo "<script>alert('" . $e->getMessage() . "'); window.history.back();</script>";
+    } else {
+        echo "<script>alert('Quyền không hợp lệ!'); window.history.back();</script>";
         exit;
     }
 }

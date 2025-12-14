@@ -152,47 +152,66 @@ try {
 
     <?php include 'user_footer.php'; ?>
     <?php include 'user_chatbox.php'; ?>
-    <script src="/user/user.js"></script>
-
-    <!-- JS AJAX lọc sản phẩm -->
     <script>
+    // ------------ FILTER FUNCTION -------------
     const filters = {
         filter: 'all',
         category: 'all',
         price: 'all'
     };
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const type = btn.dataset.type;
-            const value = btn.dataset.value;
-            filters[type] = value;
-
-            // Fetch AJAX
-            //nơi gọi đến file lọc sản phẩm trong file filter_products.php
-            const params = new URLSearchParams(filters);
-            fetch('/user/filter_products.php?' + params)
-                .then(res => res.text())
-                .then(html => {
-                    document.getElementById('productGrid').innerHTML = html;
-                });
+    document.querySelectorAll('.dropdown').forEach(drop => {
+        const btn = drop.querySelector('.dropdown-btn');
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            drop.classList.toggle("show");
         });
     });
 
-    // XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const type = this.dataset.type;
+            filters[type] = this.dataset.value;
+
+            this.closest('.dropdown')
+                .querySelector('.dropdown-btn')
+                .innerHTML = this.textContent.trim() + ' <span class="arrow">▾</span>';
+
+            loadProducts(filters);
+        });
+    });
+
+    document.addEventListener("click", () => {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove("show"));
+    });
+
+    function loadProducts(filters) {
+        const params = new URLSearchParams(filters);
+        fetch("filter_products.php?" + params)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("productGrid").innerHTML = html;
+            });
+    }
+
+    // -------- ADD TO CART AJAX --------
     document.addEventListener("click", function(e) {
         if (e.target.classList.contains("add-to-cart-btn")) {
-            const productId = e.target.dataset.id;
+            const pid = e.target.dataset.id;
 
-            fetch("/user/add_to_cart.php?id=" + productId)
+            fetch("add_to_cart.php?id=" + pid)
                 .then(res => res.json())
                 .then(data => {
-                    // Cập nhật số lượng giỏ hàng trên header
+                    // update số lượng cart trong header
                     document.getElementById("cartCount").innerText = data.total;
+                })
+                .catch(err => {
+                    console.error("Lỗi add to cart:", err);
                 });
         }
     });
     </script>
+
 </body>
 
 </html>

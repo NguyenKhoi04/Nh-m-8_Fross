@@ -2646,3 +2646,13 @@ span.qty{
   .checkout-btn{ width: 100%; text-align: center; padding: 12px; border-radius: 10px; display:block; }
 
 }
+.remember-me {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 8px;
+}
+
+.remember-me input {
+    margin-right: 8px;
+}

@@ -1,6 +1,52 @@
 <?php
 session_start();
+include("../database/connect.php");
+
+$error = "";
+
+// Xử lý form POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $remember = isset($_POST['remember']);
+
+    if ($email == "" || $password == "") {
+        $error = "⚠️ Vui lòng nhập đầy đủ thông tin!";
+    } else {
+        try {
+            $stmt = $conn->prepare("SELECT * FROM nguoi_dung WHERE email = :email LIMIT 1");
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && $password === $user['mat_khau_hash']) {
+
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['ho_ten'];
+                $_SESSION['user_role'] = $user['vai_tro'];
+
+                // Remember me bằng cookie (lưu email)
+                if ($remember) {
+                    setcookie("remember_email", $email, time() + (86400 * 30), "/");
+                } else {
+                    setcookie("remember_email", "", time() - 3600, "/");
+                }
+
+                header("Location: trangchu.php");
+                exit;
+            } else {
+                $error = "❌ Sai email hoặc mật khẩu!";
+            }
+        } catch (PDOException $e) {
+            $error = "❌ Lỗi truy vấn: " . $e->getMessage();
+        }
+    }
+}
+
+// lấy giá trị remember từ cookie
+$rememberEmail = $_COOKIE['remember_email'] ?? "";
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -31,11 +77,16 @@ session_start();
 
                 <div id="form-group-username">
                     <label for="username">Email*</label>
-                    <input type="text" id="username" name="username" placeholder="Nhập email của bạn" required>
+                    <input type="text" id="username" name="username" placeholder="Nhập email của bạn"
+                        value="<?= htmlspecialchars($rememberEmail) ?>" required>
                 </div>
                 <div id="form-group-password">
                     <label for="password">Mật khẩu*</label>
                     <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" name="remember" id="rememberMe" <?= $rememberEmail ? "checked" : "" ?>>
+                    <label for="rememberMe">Ghi nhớ tài khoản</label>
                 </div>
                 <!-- <div id="form-group-password">
                     <label for="password">Xác thực mã CAPTCHA*</label>
@@ -45,6 +96,9 @@ session_start();
                         style="height: 30px; width: 30px; display: inline-block; vertical-align: middle; margin-right: 5px;">Đăng
                     nhập</button>
             </form>
+            <?php if ($error): ?>
+            <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
             <div id="social-login">
                 <!-- <button id="facebook-login"> <img src="https://www.facebook.com/images/fb_icon_325x325.png"
                         alt="Facebook Logo">
